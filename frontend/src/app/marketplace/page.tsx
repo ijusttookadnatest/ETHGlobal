@@ -9,12 +9,18 @@ import { useBlockchainBuyOption } from "@/hooks/useUpdateOption";
 import { useWatchContractEvent } from "wagmi";
 import { OPTION_MANAGER_ADDRESS, optionManagerABI } from "@/lib/web3";
 import { useUpdateOption } from "@/hooks/useUpdateOption";
+import { useGetOption } from "@/hooks/useGetOption";
 
 
 export default function Marketplace() {
-  const { options } = useGetOptions();
-  const { blockchainBuyOption, isLoading } = useBlockchainBuyOption();
+  const { data: options, isLoading } = useGetOption('buyer', 'null');
 
+  const now = Date.now();
+  const availableOptions = (options || []).filter(option =>
+    !option.buyer_address && new Date(option.expiry).getTime() > now
+  );
+
+  const { blockchainBuyOption } = useBlockchainBuyOption();
   const { updateOption } = useUpdateOption();
   useWatchContractEvent({
     address: OPTION_MANAGER_ADDRESS,
@@ -56,26 +62,26 @@ export default function Marketplace() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {options.map((option, index) => (
+                {availableOptions.map((option, index) => (
                   <TableRow key={index}>
-                    <TableCell className="text-lg py-6">{option.assetAmount} ETH</TableCell>
-                    <TableCell className="text-lg py-6">${option.strikePrice.toLocaleString()}</TableCell>
+                    <TableCell className="text-lg py-6">{option.amount} ETH</TableCell>
+                    <TableCell className="text-lg py-6">${option.strike_price}</TableCell>
                     <TableCell className="text-lg py-6">
-                      {format(new Date(option.expiry * 1000), "MMM dd, yyyy HH:mm")} UTC
+                      {new Date(option.expiry).toLocaleString()} UTC
                     </TableCell>
                     <TableCell className="text-lg py-6 font-mono">
-                      {option.seller.slice(0, 6)}...{option.seller.slice(-4)}
+                      {option.seller_address.slice(0, 6)}...{option.seller_address.slice(-4)}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
-                        onClick={() => handleClick(option.id, option.premium)}
+                        // onClick={() => handleClick(option.id, option.premium_price)}
                         className="md:text-lg">
                         Buy Option
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
-                {options.length === 0 && (
+                {availableOptions.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8 text-lg text-muted-foreground">
                       No available options found
