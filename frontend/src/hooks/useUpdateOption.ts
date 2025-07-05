@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { optionManagerABI, erc20ABI, OPTION_MANAGER_ADDRESS, USDC_ADDRESS } from '@/lib/web3';
 
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Hook for buying an option
 export function useBlockchainBuyOption() {
   const { writeContract, data: hash, error } = useWriteContract();
@@ -16,12 +20,12 @@ export function useBlockchainBuyOption() {
         functionName: 'approve',
         args: [OPTION_MANAGER_ADDRESS, BigInt(premium)]
       });
-
+      await sleep(10000); 
       // Then buy the option
       writeContract({
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
-        functionName: 'buyOption',
+        functionName: 'buyOpt',
         args: [BigInt(optionId)]
       });
 
@@ -83,7 +87,7 @@ export function BlockchainSendAssetToContract() {
       writeContract({
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
-        functionName: 'sendERC20AssetToContract',
+        functionName: 'sendAsset',
         args: [
           BigInt(optionId)
         ],
@@ -120,7 +124,7 @@ export function BlockchainReclaimAssetFromContract() {
       writeContract({
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
-        functionName: 'reclaimAssetFromContract',
+        functionName: 'reclaimAsset',
         args: [BigInt(optionId)]
       });
 

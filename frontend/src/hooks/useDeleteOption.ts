@@ -16,7 +16,7 @@ export function useBlockchainDeleteOption() {
       writeContract({
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
-        functionName: 'deleteOptionPut',
+        functionName: 'deletePutOpt',
         args: [
           BigInt(id_blockchain),
         ]

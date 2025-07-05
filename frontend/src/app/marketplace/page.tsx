@@ -74,7 +74,7 @@ export default function Marketplace() {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
-                        // onClick={() => handleClick(option.id, option.premium_price)}
+                        onClick={() => handleClick(option.id, option.premium_price)}
                         className="md:text-lg">
                         Buy Option
                       </Button>
