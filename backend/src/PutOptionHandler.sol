@@ -133,7 +133,6 @@ contract PutOptionHandler is AutomationCompatibleInterface {
 
     function deletePutOpt(uint256 optId) external {
         Opt storage opt = opts[optId];
-        require(msg.sender == opt.seller, "Only the seller can call this function");
         require(opt.buyer == address(0), "Option already bought");
         require(opt.expiry > block.timestamp, "Option has expired");
 
@@ -145,14 +144,11 @@ contract PutOptionHandler is AutomationCompatibleInterface {
         IERC20(usdc).safeTransfer(seller, strike);
     }
 
-    function buyOpt(uint256 optId) external payable {
+    function buyOpt(uint256 optId) external {
         Opt storage opt = opts[optId];
 
         require(opt.buyer == address(0), "Option already bought");
-        require(opt.expiry > block.timestamp, "Option has expired");
 
-        uint256 allowance = IERC20(usdc).allowance(msg.sender, address(this));
-        require(allowance >= opt.premium, "Insufficient allowance for buyer (PUT)");
         uint256 balance = IERC20(usdc).balanceOf(msg.sender);
         require(balance >= opt.premium, "Insufficient balance for buyer (PUT)");
 
@@ -166,7 +162,6 @@ contract PutOptionHandler is AutomationCompatibleInterface {
 
         require(msg.sender == opt.buyer, "Only the buyer can call this function");
         require(!opt.assetSent, "Asset already sent");
-        require(opt.expiry > block.timestamp, "Option has expired");
 
         if (opt.asset == ETH) {
             require(msg.value == opt.amount, "Incorrect ETH amount sent");
@@ -185,7 +180,6 @@ contract PutOptionHandler is AutomationCompatibleInterface {
         Opt storage opt = opts[optId];
         require(msg.sender == opt.buyer, "Only the buyer can call this function");
         require(opt.assetSent, "No asset to reclaim");
-        require(opt.expiry > block.timestamp, "Option has expired");
 
         if (opt.asset == ETH) {
             (bool success, ) = payable(msg.sender).call{value: opt.amount}("");
