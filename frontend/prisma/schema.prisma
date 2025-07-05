@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PutOption {
+  id               Int      @id @default(autoincrement())
+  id_blockchain    Int?
+  strike_price     Float
+  premium_price    Float
+  expiry           DateTime
+  asset            String
+  amount           Int?
+  seller_address   String
+  buyer_address    String?
+  asset_transfered Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([asset])
+  @@index([seller_address])
+  @@index([buyer_address])
+}
