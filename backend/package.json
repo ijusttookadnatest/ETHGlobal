@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"@layerzerolabs/lz-evm-protocol-v2": "^3.0.110",
+		"@layerzerolabs/oapp-evm": "^0.3.2"
+	}
+}

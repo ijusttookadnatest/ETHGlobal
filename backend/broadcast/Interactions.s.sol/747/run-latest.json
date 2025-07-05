@@ -1,0 +1,61 @@
+{
+  "transactions": [
+    {
+      "hash": "0xe14e58ff753cb41b60b37b43eaa0eeeac8d17af834675eaf1b1644e819849e9a",
+      "transactionType": "CALL",
+      "contractName": null,
+      "contractAddress": "0xf1815bd50389c46847f0bda824ec8da914045d14",
+      "function": "approve(address,uint256)",
+      "arguments": [
+        "0xC0915573ceCE1E73F5E15A0749875603fbb63746",
+        "10000"
+      ],
+      "transaction": {
+        "from": "0x315f84f1c14676b240b13fa675db2dec4ba7bdb9",
+        "to": "0xf1815bd50389c46847f0bda824ec8da914045d14",
+        "gas": "0xcec8",
+        "value": "0x0",
+        "input": "0x095ea7b3000000000000000000000000c0915573cece1e73f5e15a0749875603fbb637460000000000000000000000000000000000000000000000000000000000002710",
+        "nonce": "0x1a",
+        "chainId": "0x2eb"
+      },
+      "additionalContracts": [],
+      "isFixedGasLimit": false
+    },
+    {
+      "hash": "0x585794d64c992db462584743a0714f173e4497984d64008d03d8aceb93e96b35",
+      "transactionType": "CALL",
+      "contractName": null,
+      "contractAddress": "0xc0915573cece1e73f5e15a0749875603fbb63746",
+      "function": "createPutOpt(uint256,uint256,uint256,address,uint256)",
+      "arguments": [
+        "10000",
+        "1000",
+        "1751810482",
+        "0xF1815bd50389c46847f0Bda824eC8da914045D14",
+        "10000"
+      ],
+      "transaction": {
+        "from": "0x315f84f1c14676b240b13fa675db2dec4ba7bdb9",
+        "to": "0xc0915573cece1e73f5e15a0749875603fbb63746",
+        "gas": "0x437c5",
+        "value": "0x0",
+        "input": "0x5eb28058000000000000000000000000000000000000000000000000000000000000271000000000000000000000000000000000000000000000000000000000000003e800000000000000000000000000000000000000000000000000000000686a81b2000000000000000000000000f1815bd50389c46847f0bda824ec8da914045d140000000000000000000000000000000000000000000000000000000000002710",
+        "nonce": "0x1b",
+        "chainId": "0x2eb"
+      },
+      "additionalContracts": [],
+      "isFixedGasLimit": false
+    }
+  ],
+  "receipts": [],
+  "libraries": [],
+  "pending": [
+    "0xe14e58ff753cb41b60b37b43eaa0eeeac8d17af834675eaf1b1644e819849e9a",
+    "0x585794d64c992db462584743a0714f173e4497984d64008d03d8aceb93e96b35"
+  ],
+  "returns": {},
+  "timestamp": 1751724092,
+  "chain": 747,
+  "commit": "da98b51"
+}
