@@ -1,4 +1,4 @@
-# Hedging Assets with On-Chain PUT Options
+# Smart hedging: hedging assets with On-Chain PUT Options
 
 This project enables users to hedge against asset price drops by buying on-chain PUT options, powered by a Solidity smart contract and a modern Next.js web interface.
 
