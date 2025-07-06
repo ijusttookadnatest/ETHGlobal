@@ -6,6 +6,7 @@ This project enables users to hedge against asset price drops by buying on-chain
 ## Table of Contents
 
 - [Description](#description)
+- [Main Use Cases](#main-use-cases)
 - [Architecture](#architecture)
 - [How It Works](#how-it-works)
   - [Smart Contract (Backend)](#smart-contract-backend)
@@ -14,7 +15,6 @@ This project enables users to hedge against asset price drops by buying on-chain
   - [Backend](#backend)
   - [Frontend](#frontend)
 - [Usage](#usage)
-- [Main Use Cases](#main-use-cases)
 
 ---
 
@@ -22,6 +22,47 @@ This project enables users to hedge against asset price drops by buying on-chain
 
 This project provides a decentralized platform to create, buy, and exercise PUT options on ERC20 (or ETH) assets, allowing users to hedge against price drops.  
 The backend is a Solidity smart contract deployed on an EVM-compatible chain, and the frontend is a modern Next.js application.
+
+---
+
+
+## Main Use Cases
+
+### 1. Protection for Stakers (Hedging)
+
+**Who?**  Stakers or long-term holders of a crypto asset (e.g., ETH, a DeFi token, etc.).
+
+**Why?**  Stakers are exposed to the risk of their asset's price dropping. If the market turns bearish, their staked value can decrease significantly.
+
+**How does the platform help?**
+- Stakers can **buy a PUT option** on their asset.
+- If the asset price falls below the strike price, the staker can exercise the option and sell their asset at the strike price, thus limiting their loss.
+- This acts as an **on-chain insurance** against price drops, providing peace of mind and financial security.
+
+**Example:**
+Alice stakes 1000 USDC worth of ETH. She buys a PUT option with a strike price of $2000. If ETH drops to $1500, she can exercise her option and sell at $2000, protecting her capital.
+
+### 2. Yield Farmers: New Financial Product & Extra Yield
+
+**Who?**  Yield farmers, liquidity providers, or DeFi users seeking to maximize returns.
+
+**Why?**  Yield farmers are always looking for new ways to earn yield and diversify their strategies.
+
+**How does the platform help?**
+- Yield farmers can **sell PUT options** on assets they hold or are willing to acquire.
+- By selling a PUT, they collect a **premium** from buyers (stakers seeking protection).
+- If the option is not exercised, they keep the premium as extra yield.
+- If exercised, they buy the asset at the strike price, which they may be comfortable with (e.g., as part of a buy-the-dip strategy).
+
+**Example:**
+Bob is a yield farmer with stablecoins. He sells PUT options on ETH with a strike price he finds attractive. If the market drops and the option is exercised, he buys ETH at a discount; if not, he keeps the premium as extra income.
+
+| User Type    | Action     | Benefit                                 |
+|-------------|------------|-----------------------------------------|
+| Staker      | Buy PUT    | Protects against price drops (hedging)  |
+| Yield Farmer| Sell PUT   | Earns premium, new DeFi yield strategy  |
+
+This dual-sided market creates a win-win: stakers get protection, and yield farmers get a new source of yield, all in a decentralized, transparent way.
 
 ---
 
@@ -115,45 +156,7 @@ Configure the contract address and ABI in `src/lib/web3.ts` if needed.
 3. **Exercise**: Send the underlying asset to receive the strike.
 4. **Track**: Use the dashboard to view your created/bought options.
 
----
 
-## Main Use Cases
-
-### 1. Protection for Stakers (Hedging)
-
-**Who?**  Stakers or long-term holders of a crypto asset (e.g., ETH, a DeFi token, etc.).
-
-**Why?**  Stakers are exposed to the risk of their asset's price dropping. If the market turns bearish, their staked value can decrease significantly.
-
-**How does the platform help?**
-- Stakers can **buy a PUT option** on their asset.
-- If the asset price falls below the strike price, the staker can exercise the option and sell their asset at the strike price, thus limiting their loss.
-- This acts as an **on-chain insurance** against price drops, providing peace of mind and financial security.
-
-**Example:**
-Alice stakes 1000 USDC worth of ETH. She buys a PUT option with a strike price of $2000. If ETH drops to $1500, she can exercise her option and sell at $2000, protecting her capital.
-
-### 2. Yield Farmers: New Financial Product & Extra Yield
-
-**Who?**  Yield farmers, liquidity providers, or DeFi users seeking to maximize returns.
-
-**Why?**  Yield farmers are always looking for new ways to earn yield and diversify their strategies.
-
-**How does the platform help?**
-- Yield farmers can **sell PUT options** on assets they hold or are willing to acquire.
-- By selling a PUT, they collect a **premium** from buyers (stakers seeking protection).
-- If the option is not exercised, they keep the premium as extra yield.
-- If exercised, they buy the asset at the strike price, which they may be comfortable with (e.g., as part of a buy-the-dip strategy).
-
-**Example:**
-Bob is a yield farmer with stablecoins. He sells PUT options on ETH with a strike price he finds attractive. If the market drops and the option is exercised, he buys ETH at a discount; if not, he keeps the premium as extra income.
-
-| User Type    | Action     | Benefit                                 |
-|-------------|------------|-----------------------------------------|
-| Staker      | Buy PUT    | Protects against price drops (hedging)  |
-| Yield Farmer| Sell PUT   | Earns premium, new DeFi yield strategy  |
-
-This dual-sided market creates a win-win: stakers get protection, and yield farmers get a new source of yield, all in a decentralized, transparent way.
 
 
 
