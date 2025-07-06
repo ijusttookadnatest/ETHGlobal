@@ -6,6 +6,7 @@ This project enables users to hedge against asset price drops by buying on-chain
 ## Table of Contents
 
 - [Description](#description)
+- [Why Flow Blockchain?](#why-flow-blockchain)
 - [Main Use Cases](#main-use-cases)
 - [Architecture](#architecture)
 - [How It Works](#how-it-works)
@@ -25,6 +26,19 @@ The backend is a Solidity smart contract deployed on an EVM-compatible chain, an
 
 ---
 
+## Why Flow Blockchain?
+
+This project is deployed on the Flow blockchain for several reasons:
+
+- **Scalability & Performance:** Flow is designed for high throughput and low-latency, making it ideal for financial applications that require fast and reliable transactions.
+- **Low Fees:** Transaction costs on Flow are significantly lower than on many other blockchains, making options trading and frequent interactions affordable for all users.
+- **EVM Compatibility:** With Flow's EVM support, Solidity smart contracts can be deployed and interacted with just like on Ethereum, while benefiting from Flow's unique infrastructure.
+- **User Experience:** Flow prioritizes usability and onboarding, providing a smoother experience for both developers and end-users.
+- **Ecosystem & Innovation:** Flow is home to a growing DeFi and NFT ecosystem, offering opportunities for integration and expansion.
+
+By leveraging Flow, this project combines the security and flexibility of EVM smart contracts with the performance and user-friendliness of the Flow network.
+
+---
 
 ## Main Use Cases
 
