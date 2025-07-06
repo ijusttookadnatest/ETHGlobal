@@ -3,15 +3,11 @@ import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagm
 import { optionManagerABI, erc20ABI, OPTION_MANAGER_ADDRESS, USDC_ADDRESS } from '@/lib/web3';
 import { useState } from 'react';
 import { writeContract } from 'wagmi/actions';
+import { useSequentialTransactions } from './useSequentialTx';
 
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
-// Custom hook for creating a put option on the blockchain
 export function useBlockchainCreatePutOption() {
-  const { writeContract, data: hash, error } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const { executeSequence, isLoading, isComplete, error } = useSequentialTransactions();
 
   const createOption = async ({
     strike_price,
@@ -26,19 +22,16 @@ export function useBlockchainCreatePutOption() {
     asset: string,
     amount: string
   }) => {
-    try {
-      // First approve USDC spending
-      await writeContract({
+    const transactions = [
+      // 1. Approve USDC
+      {
         address: USDC_ADDRESS,
         abi: erc20ABI,
         functionName: 'approve',
         args: [OPTION_MANAGER_ADDRESS, BigInt(strike_price)],
-      });
-
-      console.log('Approve transaction successful');
-      await sleep(20000); 
-      // 3. Quand c'est confirmé, lance la création de l'option
-      await writeContract({
+      },
+      // 2. Create option
+      {
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
         functionName: 'createPutOpt',
@@ -49,19 +42,16 @@ export function useBlockchainCreatePutOption() {
           asset as `0x${string}`,
           BigInt(amount),
         ],
-      });
+      }
+    ];
 
-      return true;
-    } catch (err) {
-      console.error('Error creating option:', err);
-      return false;
-    }
+    executeSequence(transactions);
   };
 
   return {
     createOption,
-    isLoading: isConfirming,
-    isSuccess: isConfirmed,
+    isLoading,
+    isSuccess: isComplete,
     error
   };
 }

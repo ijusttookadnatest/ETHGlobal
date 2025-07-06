@@ -1,56 +1,43 @@
 import { useState } from 'react';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { optionManagerABI, erc20ABI, OPTION_MANAGER_ADDRESS, USDC_ADDRESS } from '@/lib/web3';
+import { useSequentialTransactions } from './useSequentialTx';
 
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// Hook for buying an option
 export function useBlockchainBuyOption() {
-  const { writeContract, data: hash, error } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const { executeSequence, isLoading, isComplete, error } = useSequentialTransactions();
 
   const blockchainBuyOption = async (optionId: string, premium: string) => {
-    try {
-      // First approve USDC spending for premium
-      writeContract({
+    const transactions = [
+      // 1. Approve premium
+      {
         address: USDC_ADDRESS,
         abi: erc20ABI,
         functionName: 'approve',
         args: [OPTION_MANAGER_ADDRESS, BigInt(premium)]
-      });
-      await sleep(10000); 
-      // Then buy the option
-      writeContract({
+      },
+      // 2. Buy option
+      {
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
         functionName: 'buyOpt',
         args: [BigInt(optionId)]
-      });
+      }
+    ];
 
-      return true;
-    } catch (err) {
-      console.error('Error buying option:', err);
-      return false;
-    }
+    executeSequence(transactions);
   };
 
   return {
     blockchainBuyOption,
-    isLoading: isConfirming,
-    isSuccess: isConfirmed,
+    isLoading,
+    isSuccess: isComplete,
     error
   };
 }
-
 type Address = `0x${string}`;
 
-// Hook for sending asset to contract
 export function BlockchainSendAssetToContract() {
-  const { writeContract, data: hash, error } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
-  //const { address } = useAccount();
+  const { executeSequence, isLoading, isComplete, error } = useSequentialTransactions();
 
   const blockchain_sendAssetToContract = async ({
     optionId,
@@ -63,48 +50,40 @@ export function BlockchainSendAssetToContract() {
     amount: string,
     isETH?: boolean
   }) => {
-    try {
-      if (!isETH) {
-        // First approve ERC20 token spending
-        const assetAddress = asset as Address;
-        console.log('Approving spending of', amount, 'of', assetAddress);
-        console.log(isETH);
-        writeContract({
-          address: assetAddress,
-          abi: erc20ABI,
-          functionName: 'approve',
-          args: [
-            OPTION_MANAGER_ADDRESS,
-            BigInt(amount)
-          ]
-        });
-        console.log('Approved spending of', amount, 'of', assetAddress);
-      }
-
-
-      // Then send asset to contract
-      console.log('Sending asset to contract');
-      writeContract({
+    if (isETH) {
+      // Pour ETH, une seule transaction
+      const transactions = [{
         address: OPTION_MANAGER_ADDRESS,
         abi: optionManagerABI,
         functionName: 'sendAsset',
-        args: [
-          BigInt(optionId)
-        ],
-      });
-      console.log('Sent asset to contract');
-
-      return true;
-    } catch (err) {
-      console.error('Error sending asset to contract:', err);
-      return false;
+        args: [BigInt(optionId)],
+        value: BigInt(amount)
+      }];
+      executeSequence(transactions);
+    } else {
+      // Pour ERC20, approve puis send
+      const transactions = [
+        {
+          address: asset as Address,
+          abi: erc20ABI,
+          functionName: 'approve',
+          args: [OPTION_MANAGER_ADDRESS, BigInt(amount)]
+        },
+        {
+          address: OPTION_MANAGER_ADDRESS,
+          abi: optionManagerABI,
+          functionName: 'sendAsset',
+          args: [BigInt(optionId)]
+        }
+      ];
+      executeSequence(transactions);
     }
   };
 
   return {
     blockchain_sendAssetToContract,
-    isLoading: isConfirming,
-    isSuccess: isConfirmed,
+    isLoading,
+    isSuccess: isComplete,
     error
   };
 }
